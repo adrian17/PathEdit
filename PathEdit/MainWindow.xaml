@@ -1,0 +1,18 @@
+﻿<Window x:Class="PathEdit.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:pathEdit="clr-namespace:PathEdit"
+        Title="PathEdit" Height="600" Width="800">
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <GroupBox Grid.Row="0" Header="User">
+            <pathEdit:Element x:Name="UserPathElement" PathType="User" Margin="5 5 5 -5"/>
+        </GroupBox>
+        <GroupBox Grid.Row="1" Header="System">
+            <pathEdit:Element x:Name="SystemPathElement" PathType="System" Margin="5 5 5 -5"/>
+        </GroupBox>
+    </Grid>
+</Window>

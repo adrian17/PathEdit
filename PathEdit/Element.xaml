@@ -1,0 +1,118 @@
+﻿<UserControl x:Class="PathEdit.Element"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="400" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Width" Value="80" />
+            <Setter Property="Height" Value="22"/>
+            <Setter Property="Background" Value="#FFF0F0F0"/>
+        </Style>
+        <Style TargetType="Image">
+            <Setter Property="Width" Value="15" />
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+        <DataGrid x:Name="PathBox" ItemsSource="{Binding Items}" Grid.Row="0" SelectionMode="Single" AutoGenerateColumns="False" GridLinesVisibility="Horizontal" CanUserResizeRows="False" HeadersVisibility="None" HorizontalGridLinesBrush="#E4E4E4">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="Exists">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image x:Name="ExistsImage" Width="18" Source="res/dir_exist.ico"/>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding Exists}" Value="False">
+                                    <Setter Property="Source" Value="res/dir_non_exist.ico" TargetName="ExistsImage"/>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Enabled">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Name="EnableButton" Click="EnableButton_Click" Width="Auto" Background="White" Height="Auto">Disable</Button>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding Enabled}" Value="False">
+                                    <Setter Property="Content" Value="Enable" TargetName="EnableButton"/>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Enabled">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Name="OpenDirButton" Click="OpenDirButton_Click"  Width="Auto" Background="White" Height="Auto">Open</Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Path" Width="*" CanUserSort="False">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox Name="PathTextBox" Text="{Binding Path}" BorderThickness="0" VerticalAlignment="Center"/>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding Enabled}" Value="False">
+                                    <Setter Property="Foreground" Value="Gray" TargetName="PathTextBox"/>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <!-- old one, binds properly but I con't change the color
+                <DataGridTextColumn Header="Path" Binding="{Binding Path}" Width="*" CanUserSort="False"/>
+                -->
+            </DataGrid.Columns>
+        </DataGrid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Name="AddEmptyButton" Click="AddEmptyButton_Click">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="res/dir_add.ico"/>
+                    <TextBlock Text=" Add new" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+            <Button Grid.Column="1" Name="AddButton" Click="SetDirButton_Click">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="res/dir_edit.ico"/>
+                    <TextBlock Text=" Set dir" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+            <Button Grid.Column="2" Name="RemoveButton" Click="RemoveButton_Click">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="res/dir_del.ico"/>
+                    <TextBlock Text=" Remove" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+            <Button Grid.Column="3" Name="UpButton" Click="UpButton_Click">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="res/dir_up.ico"/>
+                    <TextBlock Text=" Up" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+            <Button Grid.Column="4" Name="DownButton" Click="DownButton_Click">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="res/dir_down.ico"/>
+                    <TextBlock Text=" Down" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+            <Button x:Name="Update" Grid.Column="6" Content="Reload" Click="Update_Click"/>
+            <Button x:Name="Save" Grid.Column="7" Content="Save" Click="Save_Click"/>
+        </Grid>
+    </Grid>
+</UserControl>
