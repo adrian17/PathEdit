@@ -11,8 +11,9 @@ namespace PathEdit
 {
 	public partial class Element : UserControl
 	{
-		private const string DisableUserItemsFilePath = "PathEdit_disableditems_User.dat";
-		private const string DisableSystemItemsFilePath = "PathEdit_disableditems_System.dat";
+		private const string DisabledUserItemsFileName = "DisabledItems_User.dat";
+		private const string DisabledSystemItemsFileName = "DisabledItems_System.dat";
+		private readonly string _appDataDirPath;
 
 		public PathType PathType { get; set; }
 
@@ -23,6 +24,10 @@ namespace PathEdit
 		{
 			InitializeComponent();
 			PathBox.DataContext = this;
+
+			_appDataDirPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "PathEdit");
+			if (!Directory.Exists(_appDataDirPath))
+				Directory.CreateDirectory(_appDataDirPath);
 
 			this.Loaded += Element_Loaded;
 		}
@@ -36,13 +41,12 @@ namespace PathEdit
 		{
 			var itemList = PathReader.GetPathFromRegistry(PathType)
 				.Split(new char[] {';'}, StringSplitOptions.RemoveEmptyEntries)
-				.Select(x => new PathEntry(x))
-				.ToList();
-			var disabledItemList = ReadDisabledItems(PathType).Select(x => new PathEntry(x) { Enabled = false });
+				.Select(x => new PathEntry(x));
+			var disabledItemList = ReadDisabledItems(PathType)
+				.Select(x => new PathEntry(x) { Enabled = false });
 
-
-			//todo: if there are two entries with the same path, one enabled and one disabled, keep the enabled one
-			var items = itemList.Concat(disabledItemList).Distinct().ToList();
+			var items = itemList.Concat(disabledItemList)
+				.Distinct();
 
 			Items = new ObservableCollection<PathEntry>(items);
 
@@ -61,18 +65,20 @@ namespace PathEdit
 			SaveDisabledItems(PathType, Items.Where(x => x.Enabled == false).Select(x => x.Path).ToList());
 		}
 
-		private static void SaveDisabledItems(PathType type, IEnumerable<string> items)
+		private void SaveDisabledItems(PathType type, IEnumerable<string> items)
 		{
-			string path = type == PathType.User ?  DisableUserItemsFilePath : DisableSystemItemsFilePath;
-			File.WriteAllLines(path, items);
+			var name = type == PathType.User ? DisabledUserItemsFileName : DisabledSystemItemsFileName;
+			var fullPath = Path.Combine(_appDataDirPath, name);
+			File.WriteAllLines(fullPath, items);
 		}
 
-		private static IEnumerable<string> ReadDisabledItems(PathType type)
+		private IEnumerable<string> ReadDisabledItems(PathType type)
 		{
-			string path = type == PathType.User ? DisableUserItemsFilePath : DisableSystemItemsFilePath;
-			if (!File.Exists(path))
+			var name = type == PathType.User ? DisabledUserItemsFileName : DisabledSystemItemsFileName;
+			var fullPath = Path.Combine(_appDataDirPath, name);
+			if (!File.Exists(fullPath))
 				return new List<string>();
-			return File.ReadAllLines(path).ToList();
+			return File.ReadAllLines(fullPath);
 		}
 
 		private void OpenDirButton_Click(object sender, RoutedEventArgs e)
@@ -146,7 +152,7 @@ namespace PathEdit
 
 		private void Save_Click(object sender, RoutedEventArgs e)
 		{
-			var path = String.Join(";", Items.Where(x => x.Enabled == true).Select(x => x.Path)) + ";";
+			var path = String.Join(";", Items.Where(x => x.Enabled).Select(x => x.Path)) + ";";
 			PathReader.SavePathToRegistry(PathType, path);
 		}
 	}
