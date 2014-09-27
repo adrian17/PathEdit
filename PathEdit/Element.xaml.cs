@@ -86,6 +86,8 @@ namespace PathEdit
 			var clickedElement = ((FrameworkElement) sender).DataContext as PathEntry;
 			if (clickedElement == null)
 				throw new Exception();
+			if (!clickedElement.Exists)
+				return;
 			Process.Start("explorer.exe", @"/root," + clickedElement.Path);
 		}
 
