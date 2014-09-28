@@ -65,7 +65,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Path" Width="*" CanUserSort="False">
+                <DataGridTemplateColumn Header="Path" Width="*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBox Name="PathTextBox" Text="{Binding Path}" BorderThickness="0" VerticalAlignment="Center"/>
@@ -78,7 +78,7 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <!-- old one, binds properly but I con't change the color
-                <DataGridTextColumn Header="Path" Binding="{Binding Path}" Width="*" CanUserSort="False"/>
+                <DataGridTextColumn Header="Path" Binding="{Binding Path}" Width="*"/>
                 -->
             </DataGrid.Columns>
         </DataGrid>
