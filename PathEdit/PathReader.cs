@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using Microsoft.Win32;
@@ -11,7 +12,7 @@ namespace PathEdit
 		System
 	}
 
-	public class PathEntry : IEquatable<PathEntry>, INotifyPropertyChanged
+	public class PathEntry : INotifyPropertyChanged
 	{
 		private string _path;
 		private bool _exists;
@@ -73,15 +74,17 @@ namespace PathEdit
 			if (handler != null)
 				handler(this, new PropertyChangedEventArgs(propertyName));
 		}
+	}
 
-		public bool Equals(PathEntry other)
+	class PathEqualityComparer : IEqualityComparer<PathEntry>
+	{
+		public bool Equals(PathEntry x, PathEntry y)
 		{
-			if (other == null) return false;
-			return this.Path.Equals(other.Path);
+			return x.Path.Equals(y.Path);
 		}
-		public override int GetHashCode()
+		public int GetHashCode(PathEntry x)
 		{
-			return Path.GetHashCode();
+			return x.Path.GetHashCode();
 		}
 	}
 

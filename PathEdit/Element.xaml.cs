@@ -46,7 +46,7 @@ namespace PathEdit
 				.Select(x => new PathEntry(x) { Enabled = false });
 
 			var items = itemList.Concat(disabledItemList)
-				.Distinct();
+				.Distinct(new PathEqualityComparer());
 
 			Items = new ObservableCollection<PathEntry>(items);
 
