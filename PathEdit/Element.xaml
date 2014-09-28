@@ -21,7 +21,7 @@
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
         <!-- todo: find a way to un-select an item or change the color of selected item when not in focus -->
-        <DataGrid x:Name="PathBox" ItemsSource="{Binding Items}" Grid.Row="0"
+        <DataGrid x:Name="PathBox" Grid.Row="0"
                   SelectionMode="Single" AutoGenerateColumns="False"
                   GridLinesVisibility="Horizontal" HeadersVisibility="None"
                   CanUserResizeRows="False" HorizontalGridLinesBrush="#E4E4E4"

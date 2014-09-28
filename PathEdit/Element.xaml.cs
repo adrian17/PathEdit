@@ -17,7 +17,6 @@ namespace PathEdit
 
 		public PathType PathType { get; set; }
 
-		//todo: make it react to rebindings and item changes
 		private ObservableCollection<PathEntry> Items { get; set; }
 
 		public Element()
@@ -28,6 +27,9 @@ namespace PathEdit
 			_appDataDirPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "PathEdit");
 			if (!Directory.Exists(_appDataDirPath))
 				Directory.CreateDirectory(_appDataDirPath);
+
+			Items = new ObservableCollection<PathEntry>();
+			PathBox.ItemsSource = Items;
 
 			this.Loaded += Element_Loaded;
 		}
@@ -48,10 +50,11 @@ namespace PathEdit
 			var items = itemList.Concat(disabledItemList)
 				.Distinct(new PathEqualityComparer());
 
-			Items = new ObservableCollection<PathEntry>(items);
-
-			//todo: remove this, there is already binding in XAML but doesn't react to new
-			PathBox.ItemsSource = Items;
+			Items.Clear();
+			foreach (var item in items)
+			{
+				Items.Add(item);
+			}
 		}
 
 		private void EnableButton_Click(object sender, RoutedEventArgs e)
