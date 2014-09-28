@@ -45,7 +45,7 @@ namespace PathEdit
 				.Split(new char[] {';'}, StringSplitOptions.RemoveEmptyEntries)
 				.Select(x => new PathEntry(x));
 			var disabledItemList = ReadDisabledItems(PathType)
-				.Select(x => new PathEntry(x) { Enabled = false });
+				.Select(x => new PathEntry(x) {Enabled = false});
 
 			var items = itemList.Concat(disabledItemList)
 				.Distinct(new PathEqualityComparer());
@@ -98,6 +98,7 @@ namespace PathEdit
 		{
 			Items.Add(new PathEntry(""));
 			PathBox.SelectedIndex = Items.Count - 1;
+			PathBox.ScrollIntoView(Items[Items.Count - 1]);
 			//todo: give focus to the textbox
 		}
 
@@ -120,9 +121,17 @@ namespace PathEdit
 
 		private void RemoveButton_Click(object sender, RoutedEventArgs e)
 		{
-			if (PathBox.SelectedIndex == -1)
+			var index = PathBox.SelectedIndex;
+			if (index == -1)
 				return;
-			Items.RemoveAt(PathBox.SelectedIndex);
+			Items.RemoveAt(index);
+			if (Items.Count != 0)
+			{
+				if (Items.Count > index)
+					PathBox.SelectedIndex = index;
+				else
+					PathBox.SelectedIndex = index - 1;
+			}
 		}
 
 		private void UpButton_Click(object sender, RoutedEventArgs e)
@@ -132,6 +141,7 @@ namespace PathEdit
 				return;
 			SwapItems(index, index - 1);
 			PathBox.SelectedIndex = index - 1;
+			PathBox.ScrollIntoView(Items[index - 1]);
 		}
 
 		private void DownButton_Click(object sender, RoutedEventArgs e)
@@ -141,6 +151,7 @@ namespace PathEdit
 				return;
 			SwapItems(index, index + 1);
 			PathBox.SelectedIndex = index + 1;
+			PathBox.ScrollIntoView(Items[index + 1]);
 		}
 
 		private void SwapItems(int index1, int index2)
