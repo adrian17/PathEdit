@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
 using Microsoft.Win32;
 
@@ -10,9 +11,11 @@ namespace PathEdit
 		System
 	}
 
-	public class PathEntry : IEquatable<PathEntry>
+	public class PathEntry : IEquatable<PathEntry>, INotifyPropertyChanged
 	{
 		private string _path;
+		private bool _exists;
+		private bool _enabled;
 
 		public PathEntry(string path)
 		{
@@ -21,22 +24,54 @@ namespace PathEdit
 			Enabled = true;
 		}
 
-		public bool Exists { get; set; }
-		public bool Enabled { get; set; }
+		public bool Exists
+		{
+			get { return _exists; }
+			set
+			{
+				if (value == _exists)
+					return;
+				_exists = value;
+				OnPropertyChanged("Exists");
+			}
+		}
+
+		public bool Enabled
+		{
+			get { return _enabled; }
+			set
+			{
+				if (value == _enabled)
+					return;
+				_enabled = value;
+				OnPropertyChanged("Enabled");
+			}
+		}
 
 		public string Path
 		{
 			get { return _path; }
 			set
 			{
+				if (value == _path)
+					return;
 				_path = value;
 				Exists = DirExists();
+				OnPropertyChanged("Path");
 			}
 		}
 
 		public bool DirExists()
 		{
 			return Directory.Exists(Path);
+		}
+
+		public event PropertyChangedEventHandler PropertyChanged;
+		protected virtual void OnPropertyChanged(string propertyName)
+		{
+			var handler = PropertyChanged;
+			if (handler != null)
+				handler(this, new PropertyChangedEventArgs(propertyName));
 		}
 
 		public bool Equals(PathEntry other)
