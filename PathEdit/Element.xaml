@@ -20,7 +20,6 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
-        <!-- todo: find a way to un-select an item or change the color of selected item when not in focus -->
         <DataGrid x:Name="PathBox" Grid.Row="0"
                   SelectionMode="Single" AutoGenerateColumns="False"
                   GridLinesVisibility="Horizontal" HeadersVisibility="None"
@@ -40,7 +39,6 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <!-- todo: clicking these buttons shouldn't select the item -->
                 <DataGridTemplateColumn Header="Open">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>

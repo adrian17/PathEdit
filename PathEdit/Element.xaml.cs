@@ -97,8 +97,7 @@ namespace PathEdit
 		private void AddEmptyButton_Click(object sender, RoutedEventArgs e)
 		{
 			Items.Add(new PathEntry(""));
-			PathBox.SelectedIndex = Items.Count - 1;
-			PathBox.ScrollIntoView(Items[Items.Count - 1]);
+			SetItemFocus(Items.Count - 1);
 			//todo: give focus to the textbox
 		}
 
@@ -117,6 +116,7 @@ namespace PathEdit
 				return;
 
 			Items[index].Path = dir;
+			PathBox.Focus();
 		}
 
 		private void RemoveButton_Click(object sender, RoutedEventArgs e)
@@ -126,12 +126,7 @@ namespace PathEdit
 				return;
 			Items.RemoveAt(index);
 			if (Items.Count != 0)
-			{
-				if (Items.Count > index)
-					PathBox.SelectedIndex = index;
-				else
-					PathBox.SelectedIndex = index - 1;
-			}
+				SetItemFocus(Items.Count > index ? index : index - 1);
 		}
 
 		private void UpButton_Click(object sender, RoutedEventArgs e)
@@ -140,8 +135,7 @@ namespace PathEdit
 			if (index == -1 || index == 0)
 				return;
 			SwapItems(index, index - 1);
-			PathBox.SelectedIndex = index - 1;
-			PathBox.ScrollIntoView(Items[index - 1]);
+			SetItemFocus(index - 1);
 		}
 
 		private void DownButton_Click(object sender, RoutedEventArgs e)
@@ -150,8 +144,7 @@ namespace PathEdit
 			if (index == -1 || index == Items.Count - 1)
 				return;
 			SwapItems(index, index + 1);
-			PathBox.SelectedIndex = index + 1;
-			PathBox.ScrollIntoView(Items[index + 1]);
+			SetItemFocus(index + 1);
 		}
 
 		private void SwapItems(int index1, int index2)
@@ -170,6 +163,7 @@ namespace PathEdit
 		{
 			var path = String.Join(";", Items.Where(x => x.Enabled).Select(x => x.Path)) + ";";
 			PathReader.SavePathToRegistry(PathType, path);
+			PathBox.Focus();
 		}
 
 		private void PathBox_DragOver(object sender, DragEventArgs e)
@@ -187,7 +181,6 @@ namespace PathEdit
 			{
 				e.Effects = DragDropEffects.None;
 				e.Handled = true;
-				return;
 			}
 		}
 
@@ -202,6 +195,15 @@ namespace PathEdit
 				return;
 			foreach (var path in paths)
 				Items.Add(new PathEntry(path));
+			SetItemFocus(Items.Count - 1);
+		}
+
+		// workaround for selected item being indistinguishable from others when the DataGrid goes out of focus
+		private void SetItemFocus(int index)
+		{
+			PathBox.SelectedIndex = index;
+			PathBox.ScrollIntoView(Items[index]);
+			PathBox.Focus();
 		}
 	}
 }
