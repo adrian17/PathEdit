@@ -66,7 +66,7 @@
                 <DataGridTemplateColumn Header="Path" Width="*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBox Name="PathTextBox" Text="{Binding Path}" BorderThickness="0" VerticalAlignment="Center"/>
+                            <TextBox Name="PathTextBox" Text="{Binding Path, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" VerticalAlignment="Center"/>
                             <DataTemplate.Triggers>
                                 <DataTrigger Binding="{Binding Enabled}" Value="False">
                                     <Setter Property="Foreground" Value="LightGray" TargetName="PathTextBox"/>
