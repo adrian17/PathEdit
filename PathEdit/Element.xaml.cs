@@ -91,7 +91,7 @@ namespace PathEdit
 				throw new Exception();
 			if (!clickedElement.Exists)
 				return;
-			Process.Start("explorer.exe", @"/root," + clickedElement.Path);
+			Process.Start("explorer.exe", @"/root," + clickedElement.PathExpanded);
 		}
 
 		private void AddEmptyButton_Click(object sender, RoutedEventArgs e)

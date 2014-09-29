@@ -62,9 +62,14 @@ namespace PathEdit
 			}
 		}
 
+		public string PathExpanded
+		{
+			get { return Environment.ExpandEnvironmentVariables(Path); }
+		}
+
 		public bool DirExists()
 		{
-			return Directory.Exists(Path);
+			return Directory.Exists(PathExpanded);
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -90,15 +95,20 @@ namespace PathEdit
 
 	internal static class PathReader
 	{
-		private const string UserPathKey = @"HKEY_CURRENT_USER\Environment";
+		private const string UserPathKey = @"Environment";
 
 		private const string SystemPathKey =
-			@"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment";
+			@"SYSTEM\CurrentControlSet\Control\Session Manager\Environment";
 
 		public static string GetPathFromRegistry(PathType type)
 		{
-			var key = type == PathType.User ? UserPathKey : SystemPathKey;
-			var path = Registry.GetValue(key, "Path", null) as string;
+			var mainKey = type == PathType.User ? Registry.CurrentUser : Registry.LocalMachine;
+
+			var subKey = mainKey.OpenSubKey(type == PathType.User ? UserPathKey : SystemPathKey);
+			if (subKey == null)
+				throw new Exception();
+			var path = subKey
+				.GetValue("Path", null, RegistryValueOptions.DoNotExpandEnvironmentNames) as string;
 			if (path == null)
 				throw new Exception();
 			return path;
@@ -106,13 +116,12 @@ namespace PathEdit
 
 		public static void SavePathToRegistry(PathType type, string path)
 		{
-			var key = type == PathType.User ? UserPathKey : SystemPathKey;
-
-			//todo: only for debugging, remove later
+#if DEBUG
 			System.Diagnostics.Debug.WriteLine(path);
-
-			//todo: remove on release, only when 100% sure it's safe
-			//Registry.SetValue(key, "Path", path);
+#else
+			Environment.SetEnvironmentVariable("Path", path,
+				type == PathType.User ? EnvironmentVariableTarget.User : EnvironmentVariableTarget.Machine);
+#endif
 		}
 	}
 }
