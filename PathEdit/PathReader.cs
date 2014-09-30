@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Win32;
 
 namespace PathEdit
@@ -11,12 +13,25 @@ namespace PathEdit
 
 	internal static class PathReader
 	{
+		public static IEnumerable<PathEntry> ReadPath(PathType type)
+		{
+			return GetPathFromRegistry(type)
+				.Split(new char[] {';'}, StringSplitOptions.RemoveEmptyEntries)
+				.Select(x => new PathEntry(x));
+		}
+
+		public static void SavePath(PathType type, IEnumerable<PathEntry> items)
+		{
+			var path = String.Join(";", items.Where(x => x.Enabled).Select(x => x.Path)) + ";";
+			SavePathToRegistry(type, path);
+		}
+
 		private const string UserPathKey = @"Environment";
 
 		private const string SystemPathKey =
 			@"SYSTEM\CurrentControlSet\Control\Session Manager\Environment";
 
-		public static string GetPathFromRegistry(PathType type)
+		private static string GetPathFromRegistry(PathType type)
 		{
 			var mainKey = type == PathType.User ? Registry.CurrentUser : Registry.LocalMachine;
 
@@ -30,7 +45,7 @@ namespace PathEdit
 			return path;
 		}
 
-		public static void SavePathToRegistry(PathType type, string path)
+		private static void SavePathToRegistry(PathType type, string path)
 		{
 #if DEBUG
 			System.Diagnostics.Debug.WriteLine(path);

@@ -40,13 +40,11 @@ namespace PathEdit
 
 		private void Reload()
 		{
-			var itemList = PathReader.GetPathFromRegistry(PathType)
-				.Split(new char[] {';'}, StringSplitOptions.RemoveEmptyEntries)
-				.Select(x => new PathEntry(x));
+			var itemList = PathReader.ReadPath(PathType);
 			var disabledItemList = DisabledItems.ReadDisabledItems(PathType);
 
 			var items = itemList.Concat(disabledItemList)
-				.Distinct(new PathEqualityComparer());
+				.Distinct(new PathEntry.PathEqualityComparer());
 
 			Items.Clear();
 			foreach (var item in items)
@@ -141,8 +139,7 @@ namespace PathEdit
 
 		private void Save_Click(object sender, RoutedEventArgs e)
 		{
-			var path = String.Join(";", Items.Where(x => x.Enabled).Select(x => x.Path)) + ";";
-			PathReader.SavePathToRegistry(PathType, path);
+			PathReader.SavePath(PathType, Items);
 			PathBox.Focus();
 		}
 

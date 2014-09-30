@@ -72,17 +72,17 @@ namespace PathEdit
 			if (handler != null)
 				handler(this, new PropertyChangedEventArgs(propertyName));
 		}
-	}
 
-	class PathEqualityComparer : IEqualityComparer<PathEntry>
-	{
-		public bool Equals(PathEntry x, PathEntry y)
+		public class PathEqualityComparer : IEqualityComparer<PathEntry>
 		{
-			return x.Path.Equals(y.Path);
-		}
-		public int GetHashCode(PathEntry x)
-		{
-			return x.Path.GetHashCode();
+			public bool Equals(PathEntry x, PathEntry y)
+			{
+				return x.Path.Equals(y.Path);
+			}
+			public int GetHashCode(PathEntry x)
+			{
+				return x.Path.GetHashCode();
+			}
 		}
 	}
 }
