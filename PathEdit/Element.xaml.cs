@@ -24,11 +24,18 @@ namespace PathEdit
 			PathBox.ItemsSource = Items;
 
 			this.Loaded += Element_Loaded;
+
+			Dispatcher.ShutdownStarted += Dispatcher_ShutdownStarted;
 		}
 
 		private void Element_Loaded(object sender, RoutedEventArgs e)
 		{
 			Reload();
+		}
+
+		void Dispatcher_ShutdownStarted(object sender, EventArgs e)
+		{
+			DisabledItems.SaveDisabledItems(PathType, Items);
 		}
 
 		private void Reload()
@@ -55,8 +62,6 @@ namespace PathEdit
 				throw new Exception();
 
 			clickedElement.Enabled = !clickedElement.Enabled;
-
-			DisabledItems.SaveDisabledItems(PathType, Items);
 		}
 
 		private void OpenDirButton_Click(object sender, RoutedEventArgs e)
