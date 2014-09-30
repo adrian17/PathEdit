@@ -143,8 +143,12 @@ namespace PathEdit
 			PathBox.Focus();
 		}
 
+		// todo: for some reason, the cursor sometimes changes to DragDropEffects.None for a frame
 		private void PathBox_DragOver(object sender, DragEventArgs e)
 		{
+			if (e.Handled)
+				return;
+			e.Handled = true;
 			if (!e.Data.GetDataPresent(DataFormats.FileDrop, true))
 			{
 				e.Effects = DragDropEffects.None;
@@ -154,15 +158,16 @@ namespace PathEdit
 			var paths = e.Data.GetData(DataFormats.FileDrop, true) as string[];
 			if (paths == null)
 				return;
+			e.Effects = DragDropEffects.Copy;
 			if (paths.Any(path => !Directory.Exists(path)))
-			{
 				e.Effects = DragDropEffects.None;
-				e.Handled = true;
-			}
 		}
 
 		private void PathBox_Drop(object sender, DragEventArgs e)
 		{
+			if (e.Handled)
+				return;
+			e.Handled = true;
 			if (!e.Data.GetDataPresent(DataFormats.FileDrop, true))
 				return;
 			var paths = e.Data.GetData(DataFormats.FileDrop, true) as string[];
@@ -171,7 +176,8 @@ namespace PathEdit
 			if (paths.Any(path => !Directory.Exists(path)))
 				return;
 			foreach (var path in paths)
-				Items.Add(new PathEntry(path));
+				if(Items.All(x => x.Path != path))
+					Items.Add(new PathEntry(path));
 			SetItemFocus(Items.Count - 1);
 		}
 

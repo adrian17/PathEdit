@@ -42,7 +42,9 @@
                 <DataGridTemplateColumn Header="Open">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Name="OpenDirButton" Click="OpenDirButton_Click"  Width="Auto" Background="White" Height="Auto" Content="Open"/>
+                            <Button Name="OpenDirButton" Click="OpenDirButton_Click"
+                                    Width="Auto" Height="Auto"
+                                    Background="White" Content="Open"/>
                             <DataTemplate.Triggers>
                                 <DataTrigger Binding="{Binding Exists}" Value="False">
                                     <Setter Property="Foreground" Value="LightGray" TargetName="OpenDirButton"/>
@@ -54,7 +56,9 @@
                 <DataGridTemplateColumn Header="Enabled">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Name="EnableButton" Click="EnableButton_Click" Width="Auto" Background="White" Height="Auto" Content="Disable"/>
+                            <Button Name="EnableButton" Click="EnableButton_Click"
+                                    Width="Auto" Height="Auto"
+                                    Background="White" Content="Disable"/>
                             <DataTemplate.Triggers>
                                 <DataTrigger Binding="{Binding Enabled}" Value="False">
                                     <Setter Property="Content" Value="Enable" TargetName="EnableButton"/>
@@ -66,7 +70,9 @@
                 <DataGridTemplateColumn Header="Path" Width="*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBox Name="PathTextBox" Text="{Binding Path, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" VerticalAlignment="Center"/>
+                            <TextBox Name="PathTextBox" Text="{Binding Path, UpdateSourceTrigger=PropertyChanged}"
+                                     BorderThickness="0" VerticalAlignment="Center"
+                                     PreviewDragOver="PathBox_DragOver" PreviewDrop="PathBox_Drop"/>
                             <DataTemplate.Triggers>
                                 <DataTrigger Binding="{Binding Enabled}" Value="False">
                                     <Setter Property="Foreground" Value="LightGray" TargetName="PathTextBox"/>
