@@ -23,8 +23,8 @@
         <DataGrid x:Name="PathBox" Grid.Row="0"
                   SelectionMode="Single" AutoGenerateColumns="False"
                   GridLinesVisibility="Horizontal" HeadersVisibility="None"
-                  CanUserResizeRows="False" HorizontalGridLinesBrush="#E4E4E4"
-                  AllowDrop="True" DragOver="PathBox_DragOver" Drop="PathBox_Drop">
+                  CanUserResizeRows="False" HorizontalGridLinesBrush="#E4E4E4">
+                  <!-- AllowDrop="True" DragOver="PathBox_DragOver" Drop="PathBox_Drop"> -->
             <DataGrid.Columns>
                 <DataGridTemplateColumn Header="Exists">
                     <DataGridTemplateColumn.CellTemplate>
@@ -71,8 +71,8 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBox Name="PathTextBox" Text="{Binding Path, UpdateSourceTrigger=PropertyChanged}"
-                                     BorderThickness="0" VerticalAlignment="Center"
-                                     PreviewDragOver="PathBox_DragOver" PreviewDrop="PathBox_Drop"/>
+                                     BorderThickness="0" VerticalAlignment="Center"/>
+                                     <!-- <PreviewDragOver="PathBox_DragOver" PreviewDrop="PathBox_Drop"/> -->
                             <DataTemplate.Triggers>
                                 <DataTrigger Binding="{Binding Enabled}" Value="False">
                                     <Setter Property="Foreground" Value="LightGray" TargetName="PathTextBox"/>

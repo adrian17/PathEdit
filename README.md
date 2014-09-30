@@ -12,4 +12,3 @@ Greatly inspired by https://patheditor2.codeplex.com/
 - finds non-existing directories
 - path text is editable, so you can manually edit or copy-paste it
 - you can "disable" an entry - it will be removed from PATH and stored in a file so you can easily reenable it
-- you can drag and drop a directory to add it to the list
