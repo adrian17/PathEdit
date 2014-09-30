@@ -176,7 +176,7 @@ namespace PathEdit
 			if (paths.Any(path => !Directory.Exists(path)))
 				return;
 			foreach (var path in paths)
-				if(Items.All(x => x.Path != path))
+				if(Items.All(x => x.PathExpanded != path))
 					Items.Add(new PathEntry(path));
 			SetItemFocus(Items.Count - 1);
 		}
