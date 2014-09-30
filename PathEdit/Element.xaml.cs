@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
@@ -11,9 +10,6 @@ namespace PathEdit
 {
 	public partial class Element : UserControl
 	{
-		private const string DisabledUserItemsFileName = "DisabledItems_User.dat";
-		private const string DisabledSystemItemsFileName = "DisabledItems_System.dat";
-		private readonly string _appDataDirPath;
 
 		public PathType PathType { get; set; }
 
@@ -23,10 +19,6 @@ namespace PathEdit
 		{
 			InitializeComponent();
 			PathBox.DataContext = this;
-
-			_appDataDirPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "PathEdit");
-			if (!Directory.Exists(_appDataDirPath))
-				Directory.CreateDirectory(_appDataDirPath);
 
 			Items = new ObservableCollection<PathEntry>();
 			PathBox.ItemsSource = Items;
@@ -44,8 +36,7 @@ namespace PathEdit
 			var itemList = PathReader.GetPathFromRegistry(PathType)
 				.Split(new char[] {';'}, StringSplitOptions.RemoveEmptyEntries)
 				.Select(x => new PathEntry(x));
-			var disabledItemList = ReadDisabledItems(PathType)
-				.Select(x => new PathEntry(x) {Enabled = false});
+			var disabledItemList = DisabledItems.ReadDisabledItems(PathType);
 
 			var items = itemList.Concat(disabledItemList)
 				.Distinct(new PathEqualityComparer());
@@ -65,23 +56,7 @@ namespace PathEdit
 
 			clickedElement.Enabled = !clickedElement.Enabled;
 
-			SaveDisabledItems(PathType, Items.Where(x => x.Enabled == false).Select(x => x.Path).ToList());
-		}
-
-		private void SaveDisabledItems(PathType type, IEnumerable<string> items)
-		{
-			var name = type == PathType.User ? DisabledUserItemsFileName : DisabledSystemItemsFileName;
-			var fullPath = Path.Combine(_appDataDirPath, name);
-			File.WriteAllLines(fullPath, items);
-		}
-
-		private IEnumerable<string> ReadDisabledItems(PathType type)
-		{
-			var name = type == PathType.User ? DisabledUserItemsFileName : DisabledSystemItemsFileName;
-			var fullPath = Path.Combine(_appDataDirPath, name);
-			if (!File.Exists(fullPath))
-				return new List<string>();
-			return File.ReadAllLines(fullPath);
+			DisabledItems.SaveDisabledItems(PathType, Items);
 		}
 
 		private void OpenDirButton_Click(object sender, RoutedEventArgs e)
