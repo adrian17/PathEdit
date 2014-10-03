@@ -128,7 +128,7 @@
                 </StackPanel>
             </Button>
             <Button x:Name="UpdateButton" Grid.Column="6" Content="Reload" Click="Update_Click"/>
-            <Button x:Name="SaveButton" Grid.Column="7" Content="Save" Click="Save_Click"/>
+            <Button x:Name="SaveButton" Grid.Column="7" Content="Save" BorderBrush="Red" BorderThickness="2" Click="Save_Click"/>
         </Grid>
     </Grid>
 </UserControl>
