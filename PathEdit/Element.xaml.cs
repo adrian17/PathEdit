@@ -143,8 +143,6 @@ namespace PathEdit
 			PathBox.Focus();
 		}
 
-		// drag&drop doesn't work when launching as administrator
-		/*
 		// todo: for some reason, the cursor sometimes changes to DragDropEffects.None for a frame
 		private void PathBox_DragOver(object sender, DragEventArgs e)
 		{
@@ -182,7 +180,6 @@ namespace PathEdit
 					Items.Add(new PathEntry(path));
 			SetItemFocus(Items.Count - 1);
 		}
-		*/
 
 		// workaround for selected item being indistinguishable from others when the DataGrid goes out of focus
 		private void SetItemFocus(int index)
