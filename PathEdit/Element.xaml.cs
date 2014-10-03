@@ -139,7 +139,14 @@ namespace PathEdit
 
 		private void Save_Click(object sender, RoutedEventArgs e)
 		{
-			PathReader.SavePath(PathType, Items);
+#if DEBUG
+			PathReader.SavePathToRegistry(PathType, PathReader.ItemsToPathString(Items));
+#else
+			if (PathType == PathType.User)
+				PathReader.SavePathToRegistry(PathType, PathReader.ItemsToPathString(Items));
+			else
+				BatchMode.UseBatchModeAsAdmin(Items);
+#endif
 			PathBox.Focus();
 		}
 

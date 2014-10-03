@@ -20,10 +20,10 @@ namespace PathEdit
 				.Select(x => new PathEntry(x));
 		}
 
-		public static void SavePath(PathType type, IEnumerable<PathEntry> items)
+		public static string ItemsToPathString(IEnumerable<PathEntry> items)
 		{
 			var path = String.Join(";", items.Where(x => x.Enabled).Select(x => x.Path)) + ";";
-			SavePathToRegistry(type, path);
+			return path;
 		}
 
 		private const string UserPathKey = @"Environment";
@@ -45,7 +45,7 @@ namespace PathEdit
 			return path;
 		}
 
-		private static void SavePathToRegistry(PathType type, string path)
+		public static void SavePathToRegistry(PathType type, string path)
 		{
 #if DEBUG
 			System.Diagnostics.Debug.WriteLine(path);

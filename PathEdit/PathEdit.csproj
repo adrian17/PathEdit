@@ -37,6 +37,9 @@
   <PropertyGroup>
     <ApplicationIcon>PathEditor.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>PathEdit.EntryPoint</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -68,10 +71,12 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="BatchMode.cs" />
     <Compile Include="DisabledItems.cs" />
     <Compile Include="Element.xaml.cs">
       <DependentUpon>Element.xaml</DependentUpon>
     </Compile>
+    <Compile Include="EntryPoint.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
