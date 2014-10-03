@@ -147,6 +147,7 @@ namespace PathEdit
 			else
 				BatchMode.UseBatchModeAsAdmin(Items);
 #endif
+			DisabledItems.SaveDisabledItems(PathType, Items);
 			PathBox.Focus();
 		}
 
