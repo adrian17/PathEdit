@@ -11,7 +11,8 @@ namespace PathEdit
 		public static void SavePathToTempFile(IEnumerable<PathEntry> items)
 		{
 			var path = PathReader.ItemsToPathString(items);
-			var file = new StreamWriter(TempFileName);
+			var fullPath = Path.Combine(AppDataPath.AppDataDirPath, TempFileName);
+			var file = new StreamWriter(fullPath);
 			file.Write(path);
 			file.Close();
 		}
@@ -30,6 +31,7 @@ namespace PathEdit
 			catch
 			{
 				File.Delete(TempFileName);
+				System.Windows.MessageBox.Show("Running as administrator is required to use system PATH!");
 			}
 		}
 
@@ -37,14 +39,19 @@ namespace PathEdit
 		{
 			try
 			{
-				var file = new StreamReader(TempFileName);
+				var fullPath = Path.Combine(AppDataPath.AppDataDirPath, TempFileName);
+				var file = new StreamReader(fullPath);
 				var path = file.ReadToEnd();
 				PathReader.SavePathToRegistry(PathType.System, path);
 				file.Close();
-				File.Delete(TempFileName);
 			}
 			catch
 			{
+				System.Windows.MessageBox.Show("An unidentified error happened while trying to save system PATH.");
+			}
+			finally
+			{
+				File.Delete(TempFileName);
 			}
 		}
 	}

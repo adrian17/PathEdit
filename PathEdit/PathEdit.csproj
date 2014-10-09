@@ -71,6 +71,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="AppDataPath.cs" />
     <Compile Include="BatchMode.cs" />
     <Compile Include="DisabledItems.cs" />
     <Compile Include="Element.xaml.cs">
