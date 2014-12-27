@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Windows;
 
 namespace PathEdit
 {
@@ -31,7 +32,8 @@ namespace PathEdit
 			catch
 			{
 				File.Delete(TempFileName);
-				System.Windows.MessageBox.Show("Running as administrator is required to use system PATH!");
+				MessageBox.Show("Administrator permissions are required to modify system PATH." +
+											   "Changes were not saved.");
 			}
 		}
 
@@ -47,7 +49,7 @@ namespace PathEdit
 			}
 			catch
 			{
-				System.Windows.MessageBox.Show("An unidentified error happened while trying to save system PATH.");
+				MessageBox.Show("An unidentified error happened while trying to save system PATH.");
 			}
 			finally
 			{

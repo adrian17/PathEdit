@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security;
+using System.Windows;
 using Microsoft.Win32;
 
 namespace PathEdit
@@ -26,7 +28,8 @@ namespace PathEdit
 			return path;
 		}
 
-		private const string UserPathKey = @"Environment";
+		private const string UserPathKey =
+			@"Environment";
 
 		private const string SystemPathKey =
 			@"SYSTEM\CurrentControlSet\Control\Session Manager\Environment";
@@ -35,14 +38,33 @@ namespace PathEdit
 		{
 			var mainKey = type == PathType.User ? Registry.CurrentUser : Registry.LocalMachine;
 
-			var subKey = mainKey.OpenSubKey(type == PathType.User ? UserPathKey : SystemPathKey);
-			if (subKey == null)
-				throw new Exception();
-			var path = subKey
-				.GetValue("Path", null, RegistryValueOptions.DoNotExpandEnvironmentNames) as string;
-			if (path == null)
-				throw new Exception();
-			return path;
+			try
+			{
+				var subKey = mainKey.OpenSubKey(type == PathType.User ? UserPathKey : SystemPathKey);
+				if (subKey == null)
+					throw new Exception();
+				var path = subKey
+					.GetValue("Path", "", RegistryValueOptions.DoNotExpandEnvironmentNames) as string;
+				return path;
+			}
+			catch (SecurityException)
+			{
+				MessageBox.Show("An error has occured while trying to open registry.\n" +
+								"Your account probably doesn't have necessary permissions.");
+				Application.Current.Shutdown();
+			}
+			catch (UnauthorizedAccessException)
+			{
+				MessageBox.Show("An error has occured while trying to open registry.\n" +
+								"Your account probably doesn't have necessary permissions.");
+				Application.Current.Shutdown();
+			}
+			catch (Exception e)
+			{
+				MessageBox.Show("An unknown error has occured while trying to open registry:\n" + e.Message);
+				Application.Current.Shutdown();
+			}
+			return "";
 		}
 
 		public static void SavePathToRegistry(PathType type, string path)
